@@ -1,57 +1,55 @@
-const { userType } = require('../node_types');
+/* eslint-disable no-unused-vars */
+const { userType } = require('../nodeTypes');
 const {
   GraphQLString,
-  GraphQLList,
+  GraphQLBoolean,
   GraphQLInt,
-  GraphQLBoolean
+  GraphQLID
 } = require('graphql');
-
-let fakeId = 1234;
+const UserService = require('../../services/userService');
 
 const UserCreate = {
   type: userType,
   args: {
     name: { type: GraphQLString }
   },
-  resolve: (_, { name }) => {
-    const newUser = { id: fakeId++, name };
-    fakeDataBase.push(newUser);
+  resolve: async (_, { name }) => {
+    const userService = new UserService();
+    const newUser = await userService.createUser({ name });
 
     return newUser;
   }
 };
 
-// const UserDelete = {
-//   type: GraphQLBoolean,
-//   args: {
-//     id: { type: GraphQLInt }
-//   },
-//   resolve: (_, { id }) => {
-//     const userIndex = fakeDataBase.findIndex(v => v.id === id);
-//     if (userIndex >= 0) {
-//       delete fakeDataBase[userIndex];
-//       return true;
-//     } else {
-//       return false;
-//     }
-//   }
-// };
+const UserDelete = {
+  type: GraphQLBoolean,
+  args: {
+    _id: { type: GraphQLID }
+  },
+  resolve: async (_, { _id }) => {
+    const userService = new UserService();
+    const res = await userService.deleteUser({ _id });
 
-// const UserUpdate = {
-//   type: GraphQLBoolean,
-//   args: {
-//     id: { type: GraphQLInt },
-//     name: { type: GraphQLString }
-//   },
-//   resolve: (_, { id, name }) => {
-//     const userIndex = fakeDataBase.findIndex(v => v.id === id);
-//     if (userIndex >= 0) {
-//       fakeDataBase[userIndex].name = name;
-//       return true;
-//     } else {
-//       return false;
-//     }
-//   }
-// };
+    if (res.ok) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+};
 
-module.exports = { UserCreate };
+const UserUpdate = {
+  type: userType,
+  args: {
+    _id: { type: GraphQLID },
+    name: { type: GraphQLString }
+  },
+  resolve: async (_, { _id, name }) => {
+    const userService = new UserService();
+    const updatedUser = await userService.updateUser(_id, { name });
+
+    return updatedUser;
+  }
+};
+
+module.exports = { UserCreate, UserUpdate, UserDelete };
