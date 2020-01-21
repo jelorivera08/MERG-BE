@@ -1,74 +1,28 @@
-const { getDB } = require('../config/databaseConnection');
-const ObjectId = require('mongodb').ObjectId;
+const MongoDbRepo = require('../repository/mongoDbRepository');
 
 class UserService {
   constructor() {
-    this.collection = getDB().collection('Users');
+    this.UserRepository = new MongoDbRepo('Users');
   }
 
-  getAll() {
-    return new Promise((resolve, reject) => {
-      this.collection.find({}).toArray((err, data) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(data);
-      });
-    });
+  getAllUsers() {
+    return this.UserRepository.getAll();
   }
 
-  geById(opt) {
-    return new Promise((resolve, reject) => {
-      this.collection.findOne({ _id: ObjectId(opt._id) }, (err, data) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(data);
-      });
-    });
+  getUserById(id) {
+    return this.UserRepository.geById(id);
   }
 
   updateUser(_id, opt) {
-    return new Promise((resolve, reject) => {
-      this.collection.findOneAndUpdate(
-        { _id: ObjectId(_id) },
-        { $set: opt },
-        { returnOriginal: false },
-        (err, data) => {
-          if (err) {
-            reject(err);
-          }
-
-          resolve(data.value);
-        }
-      );
-    });
+    return this.UserRepository.updateOne(_id, opt);
   }
 
-  deleteUser(opt) {
-    return new Promise((resolve, reject) => {
-      this.collection.findOneAndDelete(
-        { _id: ObjectId(opt._id) },
-        (err, data) => {
-          if (err) {
-            reject(err);
-          }
-          resolve(data);
-        }
-      );
-    });
+  deleteUser(_id) {
+    return this.UserRepository.deleteOne(_id);
   }
 
   createUser(opt) {
-    return new Promise((resolve, reject) => {
-      this.collection.insertOne(opt, (err, data) => {
-        if (err) {
-          reject(err);
-        }
-        resolve(data.ops[0]);
-      });
-      1;
-    });
+    return this.UserRepository.create(opt);
   }
 }
 

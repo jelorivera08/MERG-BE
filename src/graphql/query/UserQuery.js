@@ -9,7 +9,7 @@ const UserQuery = {
   },
   resolve: async (_, { _id }) => {
     const userService = new UserService();
-    const user = await userService.geById({ _id });
+    const user = await userService.getUserById({ _id });
 
     return user;
   }
@@ -20,7 +20,7 @@ const UsersQuery = {
   args: {},
   resolve: async () => {
     const userService = new UserService();
-    const users = await userService.getAll();
+    const users = await userService.getAllUsers();
 
     return users;
   }

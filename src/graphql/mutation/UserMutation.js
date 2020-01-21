@@ -28,7 +28,7 @@ const UserDelete = {
   },
   resolve: async (_, { _id }) => {
     const userService = new UserService();
-    const res = await userService.deleteUser({ _id });
+    const res = await userService.deleteUser(_id);
 
     if (res.ok) {
       return true;
