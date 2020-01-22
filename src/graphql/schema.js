@@ -1,25 +1,24 @@
 const { GraphQLSchema, GraphQLObjectType } = require('graphql');
-const { UsersQuery, UserQuery } = require('./query/UserQuery');
+const { NotesQuery } = require('./query/NotesQuery');
 const {
-  UserCreate,
-  UserDelete,
-  UserUpdate
-} = require('./mutation/UserMutation');
+  CreateNoteMutation,
+  UpdateNoteMutation,
+  DeleteNoteMutation
+} = require('./mutation/NotesMutation');
 
 const QueryType = new GraphQLObjectType({
   name: 'Query',
   fields: () => ({
-    users: UsersQuery,
-    user: UserQuery
+    notes: NotesQuery
   })
 });
 
 const MutationType = new GraphQLObjectType({
   name: 'Mutation',
   fields: () => ({
-    userCreate: UserCreate,
-    userDelete: UserDelete,
-    userUpdate: UserUpdate
+    createNote: CreateNoteMutation,
+    deleteNote: DeleteNoteMutation,
+    updateNote: UpdateNoteMutation
   })
 });
 
