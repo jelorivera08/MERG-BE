@@ -22,7 +22,7 @@ const CreateNoteMutation = {
 };
 
 const DeleteNoteMutation = {
-  type: GraphQLBoolean,
+  type: GraphQLID,
   args: {
     _id: { type: GraphQLID }
   },
@@ -31,9 +31,7 @@ const DeleteNoteMutation = {
     const res = await noteService.deleteNote(_id);
 
     if (res.ok) {
-      return true;
-    } else {
-      return false;
+      return _id;
     }
   }
 };
